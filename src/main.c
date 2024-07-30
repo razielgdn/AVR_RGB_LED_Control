@@ -20,7 +20,7 @@ int main (){
 
     while (1)    
     {
-        change_LED_status (flankDetector(_500ms_ready(), _500ms_ready()) );
+        change_LED_status (flankDetector( _1s_ready(), _1s_ready()) );
     }    
     return 0;
 }
@@ -40,5 +40,4 @@ uint8_t flankDetector(uint8_t last_signal, uint8_t now_signal){
         return TRUE;
     }
     return FALSE;   
-
 }

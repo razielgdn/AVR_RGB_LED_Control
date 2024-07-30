@@ -5,7 +5,7 @@
 //#define COUNTER_10_MS_VALUE 20U
 //#define COUNTER_100_MS_VALUE 200U
 #define COUNTER_500_MS_VALUE 1000U
-//#define COUNTER_1S_VALUE 2000U   // Max value of the main counter to get 
+#define COUNTER_1S_VALUE 2000U   // Max value of the main counter to get 
 #define TRUE 1U
 #define FALSE 0U
 
@@ -19,4 +19,5 @@ void start_timer(int timer_ID);
 void configureTimer0(void);
 //void configureTimer1();
 //void configureTimer2();
-int _500ms_ready();
+uint8_t _500ms_ready();
+uint8_t _1s_ready();

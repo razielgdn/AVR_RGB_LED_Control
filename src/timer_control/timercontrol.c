@@ -74,14 +74,13 @@
 //static  uint8_t counter_10ms=COUNTER_10_MS_VALUE;
 //static  uint8_t counter_100ms=COUNTER_100_MS_VALUE;
 static  uint16_t counter_500ms=COUNTER_500_MS_VALUE;
-//static uint8_t signal01=1;
-//static  uint16_t counter_1s=COUNTER_1S_VALUE;
+static  uint16_t counter_1s=COUNTER_1S_VALUE;
 
 //uint8_t tc_flag_05ms=0;
 //uint8_t tc_flag_10ms=0;
 //uint8_t tc_flag_100ms=0;
-static uint16_t tc_flag_500ms=0;
-//uint8_t tc_flag_1s=0;
+static uint8_t tc_flag_500ms=0;
+static uint8_t tc_flag_1s=0;
 //static uint8_t variable =  0;
 
 /* The idea of this project is do a timer base to manage the MCU resources and process. 
@@ -97,9 +96,13 @@ void configureTimer0(){
    // The timer is configured with a clk div of 8 and  the TOP of 249 to create a frequency of 2Khz (0.0005s)
 }
 
- int _500ms_ready(){
+ uint8_t _500ms_ready(){
 
      return tc_flag_500ms;
+ }
+ uint8_t _1s_ready(){
+
+     return tc_flag_1s;
  }
 
 ISR(TIMER0_COMPA_vect)
@@ -115,7 +118,19 @@ ISR(TIMER0_COMPA_vect)
     {
          counter_500ms=COUNTER_500_MS_VALUE;        
          tc_flag_500ms=TRUE;
-    }   
+    }
+
+    if (counter_1s)
+    {
+        counter_1s--; 
+        tc_flag_1s=FALSE;          
+    }
+    else
+    {
+         counter_1s=COUNTER_500_MS_VALUE;        
+         tc_flag_1s=TRUE;
+    }
+
 }
 
 /*
