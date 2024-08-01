@@ -9,11 +9,11 @@
         { RGBLED_BLUE_RED,  RGBLED_BLUE_GREEN},  // Not used 
         { ALL_ON,           ALL_OFF}             // All on to all Off
     }; 
-
+//
 void change_LED_status(int cycle_Flag){
     static int LED_color=0;
     
-    PORTB = states_machine[LED_color].RGB_color;
+    PORTB = (1<<PORT3) | states_machine[LED_color].RGB_color  ;
     
     if(cycle_Flag)
     {

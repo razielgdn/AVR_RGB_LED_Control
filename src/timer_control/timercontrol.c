@@ -73,15 +73,20 @@
 //static  uint8_t counter_5ms=COUNTER_05_MS_VALUE;
 //static  uint8_t counter_10ms=COUNTER_10_MS_VALUE;
 //static  uint8_t counter_100ms=COUNTER_100_MS_VALUE;
-static  uint16_t counter_500ms=COUNTER_500_MS_VALUE;
-static  uint16_t counter_1s=COUNTER_1S_VALUE;
-
+// 
 //uint8_t tc_flag_05ms=0;
 //uint8_t tc_flag_10ms=0;
 //uint8_t tc_flag_100ms=0;
+// 
+#if (ENABLE_TIMER0_500mS >0)
 static uint8_t tc_flag_500ms=0;
+static  uint16_t counter_500ms=COUNTER_500_MS_VALUE;
+#endif
+
+#if (ENABLE_TIMER0_1S >0 )
+static  uint16_t counter_1s=COUNTER_1S_VALUE;
 static uint8_t tc_flag_1s=0;
-//static uint8_t variable =  0;
+#endif
 
 /* The idea of this project is do a timer base to manage the MCU resources and process. 
    Timer 0 will be the main timer to manage process in the MCU
@@ -96,29 +101,38 @@ void configureTimer0(){
    // The timer is configured with a clk div of 8 and  the TOP of 249 to create a frequency of 2Khz (0.0005s)
 }
 
- uint8_t _500ms_ready(){
+#if (ENABLE_TIMER0_500mS > 0)
+uint8_t _500ms_ready()
+{
+    return tc_flag_500ms;
+}
+#endif
 
-     return tc_flag_500ms;
- }
- uint8_t _1s_ready(){
-
-     return tc_flag_1s;
- }
+#if (ENABLE_TIMER0_1S >0 )
+uint8_t _1s_ready()
+{
+    return tc_flag_1s;
+}
+#endif
 
 ISR(TIMER0_COMPA_vect)
 {
-     // the algorithm will use descendant counts. 
-     // 5ms BaseTimer
-    if (counter_500ms)
-    {
-        counter_500ms--; 
-        tc_flag_500ms=FALSE;          
-    }
-    else
-    {
-         counter_500ms=COUNTER_500_MS_VALUE;        
-         tc_flag_500ms=TRUE;
-    }
+    // the algorithm will use descendant counts. 
+    // 5ms BaseTimer
+ #if (ENABLE_TIMER0_500mS)   
+     if (counter_500ms)
+     {
+         counter_500ms--; 
+         tc_flag_500ms=FALSE;          
+     }
+     else
+     {
+          counter_500ms=COUNTER_500_MS_VALUE;        
+          tc_flag_500ms=TRUE;
+     }
+ #endif   
+// 1s BaseTimer
+#if (ENABLE_TIMER0_1S >0 )
 
     if (counter_1s)
     {
@@ -130,7 +144,7 @@ ISR(TIMER0_COMPA_vect)
          counter_1s=COUNTER_500_MS_VALUE;        
          tc_flag_1s=TRUE;
     }
-
+#endif
 }
 
 /*
@@ -162,4 +176,4 @@ void start_timer(int timer_ID)
         TIMSK2=0x00;
          break;
      }
-}     
+}     FALSE

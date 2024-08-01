@@ -32,6 +32,7 @@ void init_device(){
     configureTimer0();    
     start_timer(0);    
     sei();   
+    PORTB = 0x00; 
 }
 
 uint8_t flankDetector(uint8_t last_signal, uint8_t now_signal){
